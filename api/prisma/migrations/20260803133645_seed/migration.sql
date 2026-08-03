@@ -2,7 +2,7 @@
 -- ============================================================
 -- SEED DATA
 -- ============================================================
- 
+
 -- Admin login: admin@example.com / Admin123!
 INSERT INTO users (email, password, name)
 VALUES ('admin@example.com', '$2b$10$dJ2CziW2pDwrUhYkgTEqvOfmymxsBVyluXTqukCevGW.I22eyU3yC', 'Admin');

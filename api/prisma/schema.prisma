@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Broker {
-  id                  Int                  @id @default(autoincrement())
+  id                  String               @id @default(dbgenerated("(uuid())")) @db.Char(36)
   name                String               @db.VarChar(255)
   isActive            Boolean              @default(true) @map("is_active")
   dailyCap            Int                  @map("daily_cap")
@@ -26,9 +26,9 @@ model Broker {
 }
 
 model DistributionBroker {
-  id             Int          @id @default(autoincrement())
-  distributionId Int          @map("distribution_id")
-  brokerId       Int          @map("broker_id")
+  id             String       @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  distributionId String       @map("distribution_id") @db.Char(36)
+  brokerId       String       @map("broker_id") @db.Char(36)
   percentage     Int
   isActive       Boolean      @default(true) @map("is_active")
   broker         Broker       @relation(fields: [brokerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_db_broker")
@@ -40,8 +40,8 @@ model DistributionBroker {
 }
 
 model Distribution {
-  id                  Int                  @id @default(autoincrement())
-  formId              Int                  @unique(map: "form_id") @map("form_id")
+  id                  String               @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  formId              String               @unique(map: "form_id") @map("form_id") @db.Char(36)
   createdAt           DateTime             @default(now()) @map("created_at") @db.DateTime(0)
   distributionBrokers DistributionBroker[]
   form                Form                 @relation(fields: [formId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_distributions_form")
@@ -51,7 +51,7 @@ model Distribution {
 }
 
 model Form {
-  id           Int           @id @default(autoincrement())
+  id           String        @id @default(dbgenerated("(uuid())")) @db.Char(36)
   name         String        @db.VarChar(255)
   slug         String        @unique(map: "slug") @db.VarChar(255)
   createdAt    DateTime      @default(now()) @map("created_at") @db.DateTime(0)
@@ -62,14 +62,14 @@ model Form {
 }
 
 model Lead {
-  id             Int           @id @default(autoincrement())
+  id             String        @id @default(dbgenerated("(uuid())")) @db.Char(36)
   name           String        @db.VarChar(255)
   email          String        @db.VarChar(255)
   phone          String        @db.VarChar(50)
   ipAddress      String        @map("ip_address") @db.VarChar(45)
-  formId         Int           @map("form_id")
-  distributionId Int?          @map("distribution_id")
-  brokerId       Int?          @map("broker_id")
+  formId         String        @map("form_id") @db.Char(36)
+  distributionId String?       @map("distribution_id") @db.Char(36)
+  brokerId       String?       @map("broker_id") @db.Char(36)
   status         LeadsStatus   @default(unsent)
   createdAt      DateTime      @default(now()) @map("created_at") @db.DateTime(0)
   broker         Broker?       @relation(fields: [brokerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_leads_broker")
@@ -85,7 +85,7 @@ model Lead {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(dbgenerated("(uuid())")) @db.Char(36)
   email     String   @unique(map: "email") @db.VarChar(255)
   password  String   @db.VarChar(255)
   name      String   @db.VarChar(255)

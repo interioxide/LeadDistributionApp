@@ -1,3 +1,7 @@
+-- ============================================================
+-- SCHEMA
+-- ============================================================
+
 SET FOREIGN_KEY_CHECKS = 0;
  
 DROP TABLE IF EXISTS leads;
@@ -9,12 +13,8 @@ DROP TABLE IF EXISTS users;
  
 SET FOREIGN_KEY_CHECKS = 1;
  
--- ============================================================
--- SCHEMA
--- ============================================================
- 
 CREATE TABLE users (
-  id         INT AUTO_INCREMENT PRIMARY KEY,
+  id         CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
   email      VARCHAR(255) NOT NULL UNIQUE,
   password   VARCHAR(255) NOT NULL, -- bcrypt hash
   name       VARCHAR(255) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE users (
 );
  
 CREATE TABLE brokers (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
+  id            CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
   name          VARCHAR(255) NOT NULL,
   is_active     BOOLEAN NOT NULL DEFAULT TRUE,
   daily_cap     INT NOT NULL,
@@ -35,23 +35,23 @@ CREATE TABLE brokers (
 );
  
 CREATE TABLE forms (
-  id         INT AUTO_INCREMENT PRIMARY KEY,
+  id         CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
   name       VARCHAR(255) NOT NULL,
   slug       VARCHAR(255) NOT NULL UNIQUE,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
  
 CREATE TABLE distributions (
-  id         INT AUTO_INCREMENT PRIMARY KEY,
-  form_id    INT NOT NULL UNIQUE,            -- unique = enforces "one distribution per form"
+  id         CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
+  form_id    CHAR(36) NOT NULL UNIQUE,       -- unique = enforces "one distribution per form"
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_distributions_form FOREIGN KEY (form_id) REFERENCES forms(id)
 );
  
 CREATE TABLE distribution_brokers (
-  id              INT AUTO_INCREMENT PRIMARY KEY,
-  distribution_id INT NOT NULL,
-  broker_id       INT NOT NULL,
+  id              CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
+  distribution_id CHAR(36) NOT NULL,
+  broker_id       CHAR(36) NOT NULL,
   percentage      INT NOT NULL,              -- 0-100 target share
   is_active       BOOLEAN NOT NULL DEFAULT TRUE, -- active *inside this distribution*
   CONSTRAINT fk_db_distribution FOREIGN KEY (distribution_id) REFERENCES distributions(id),
@@ -60,14 +60,14 @@ CREATE TABLE distribution_brokers (
 );
  
 CREATE TABLE leads (
-  id              INT AUTO_INCREMENT PRIMARY KEY,
+  id              CHAR(36) NOT NULL DEFAULT (UUID()) PRIMARY KEY,
   name            VARCHAR(255) NOT NULL,
   email           VARCHAR(255) NOT NULL,     -- store normalized: trim + lowercase
   phone           VARCHAR(50) NOT NULL,
   ip_address      VARCHAR(45) NOT NULL,      -- IPv4 or IPv6
-  form_id         INT NOT NULL,
-  distribution_id INT NULL,
-  broker_id       INT NULL,
+  form_id         CHAR(36) NOT NULL,
+  distribution_id CHAR(36) NULL,
+  broker_id       CHAR(36) NULL,
   status          ENUM('sent', 'unsent', 'duplicate', 'failed') NOT NULL DEFAULT 'unsent',
   created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_leads_form FOREIGN KEY (form_id) REFERENCES forms(id),
