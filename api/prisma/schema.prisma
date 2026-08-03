@@ -1,0 +1,104 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Broker {
+  id                  Int                  @id @default(autoincrement())
+  name                String               @db.VarChar(255)
+  isActive            Boolean              @default(true) @map("is_active")
+  dailyCap            Int                  @map("daily_cap")
+  timezone            String               @db.VarChar(64)
+  openingTime         String               @map("opening_time") @db.VarChar(5)
+  closingTime         String               @map("closing_time") @db.VarChar(5)
+  workingDays         String               @map("working_days") @db.VarChar(20)
+  createdAt           DateTime             @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt           DateTime             @default(now()) @map("updated_at") @db.DateTime(0)
+  distributionBrokers DistributionBroker[]
+  leads               Lead[]
+
+  @@map("brokers")
+}
+
+model DistributionBroker {
+  id             Int          @id @default(autoincrement())
+  distributionId Int          @map("distribution_id")
+  brokerId       Int          @map("broker_id")
+  percentage     Int
+  isActive       Boolean      @default(true) @map("is_active")
+  broker         Broker       @relation(fields: [brokerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_db_broker")
+  distribution   Distribution @relation(fields: [distributionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_db_distribution")
+
+  @@unique([distributionId, brokerId], map: "uq_distribution_broker")
+  @@index([brokerId], map: "fk_db_broker")
+  @@map("distribution_brokers")
+}
+
+model Distribution {
+  id                  Int                  @id @default(autoincrement())
+  formId              Int                  @unique(map: "form_id") @map("form_id")
+  createdAt           DateTime             @default(now()) @map("created_at") @db.DateTime(0)
+  distributionBrokers DistributionBroker[]
+  form                Form                 @relation(fields: [formId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_distributions_form")
+  leads               Lead[]
+
+  @@map("distributions")
+}
+
+model Form {
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(255)
+  slug         String        @unique(map: "slug") @db.VarChar(255)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.DateTime(0)
+  distribution Distribution?
+  leads        Lead[]
+
+  @@map("forms")
+}
+
+model Lead {
+  id             Int           @id @default(autoincrement())
+  name           String        @db.VarChar(255)
+  email          String        @db.VarChar(255)
+  phone          String        @db.VarChar(50)
+  ipAddress      String        @map("ip_address") @db.VarChar(45)
+  formId         Int           @map("form_id")
+  distributionId Int?          @map("distribution_id")
+  brokerId       Int?          @map("broker_id")
+  status         LeadsStatus   @default(unsent)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.DateTime(0)
+  broker         Broker?       @relation(fields: [brokerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_leads_broker")
+  distribution   Distribution? @relation(fields: [distributionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_leads_distribution")
+  form           Form          @relation(fields: [formId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_leads_form")
+
+  @@index([distributionId], map: "fk_leads_distribution")
+  @@index([formId], map: "fk_leads_form")
+  @@index([brokerId, createdAt], map: "idx_leads_broker_created")
+  @@index([email], map: "idx_leads_email")
+  @@index([status], map: "idx_leads_status")
+  @@map("leads")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique(map: "email") @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+
+  @@map("users")
+}
+
+enum LeadsStatus {
+  sent
+  unsent
+  duplicate
+  failed
+
+  @@map("leads_status")
+}
