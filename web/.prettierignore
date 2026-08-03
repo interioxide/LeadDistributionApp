@@ -1,0 +1,9 @@
+# .prettierignore
+node_modules
+dist
+build
+.next
+coverage
+package-lock.json
+pnpm-lock.yaml
+components/ui
