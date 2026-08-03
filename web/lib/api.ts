@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import { SearchQuery } from './types/pagination';
 
 export class ApiError extends Error {
     static readonly defaultErrorMsg: string = 'API request failed';
@@ -54,6 +54,34 @@ export async function getCurrentUser() {
     if (!response.ok) {
         window.location.replace('/login');
         return false;
+    }
+    return response.json();
+}
+
+export async function getBrokers(query: SearchQuery = {}) {
+    const url = new URL('/brokers', process.env.NEXT_PUBLIC_API_URL);
+    url.search = new URLSearchParams({
+        ...(query.search && { search: query.search }),
+        ...(query.pagination && {
+            page: (query.pagination.pageIndex + 1).toString(),
+            limit: query.pagination.pageSize.toString(),
+        }),
+        ...(query.sorting && {
+            orderBy: query.sorting.at(0)?.id,
+            orderDirection: query.sorting.at(0)?.desc ? 'desc' : 'asc',
+        }),
+    }).toString();
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
     }
     return response.json();
 }

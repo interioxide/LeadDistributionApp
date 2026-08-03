@@ -79,22 +79,22 @@ const menuItems: MenuGroup[] = [
             },
             {
                 title: 'Brokers',
-                url: '/reports',
+                url: '/brokers',
                 icon: Users,
             },
             {
                 title: 'Form',
-                url: '/reports',
+                url: '/forms',
                 icon: FileText,
             },
             {
                 title: 'Distribution',
-                url: '/reports',
+                url: '/distribution',
                 icon: Network,
             },
             {
                 title: 'Leads',
-                url: '/reports',
+                url: '/leads',
                 icon: Contact,
             },
         ],
@@ -131,7 +131,7 @@ export function AppSidebar() {
                             <SidebarMenu>
                                 {item.subItems.map((subItem: SubMenuItem, subItemKey: number) => (
                                     <SidebarMenuItem key={subItemKey}>
-                                         <SidebarMenuButton asChild isActive={pathname === subItem.url} tooltip={subItem.title}>
+                                        <SidebarMenuButton asChild isActive={pathname === subItem.url} tooltip={subItem.title}>
                                             <Link href={subItem.url}>
                                                 <subItem.icon className="h-5 w-5" />
                                                 <span>{subItem.title}</span>
@@ -145,9 +145,7 @@ export function AppSidebar() {
                 </SidebarGroup>
             </SidebarContent>
 
-            <SidebarFooter>
-                {<NavUser user={data.user} />}
-            </SidebarFooter>
+            <SidebarFooter>{<NavUser user={data.user} />}</SidebarFooter>
         </Sidebar>
     );
 }

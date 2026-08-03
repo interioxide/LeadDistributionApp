@@ -16,7 +16,7 @@ export class AuthController {
         this.accessTokenCookieOptions = {
             httpOnly: true,
             secure: true,
-            sameSite: 'lax',
+            sameSite: 'none',
             path: '/',
             domain: configService.get<string>('responseCookie.domain'),
             maxAge: ms(configService.get<string>('accessToken.expiration') as StringValue),
@@ -33,5 +33,14 @@ export class AuthController {
 
         response.cookie('accessToken', signIn.accessToken, this.accessTokenCookieOptions);
         return signIn;
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('logout')
+    async logout(@Res({ passthrough: true }) response: Response) {
+        response.clearCookie('accessToken', this.accessTokenCookieOptions);
+        return {
+            message: 'Logged out successfully.',
+        };
     }
 }

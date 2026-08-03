@@ -21,7 +21,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
-	const {
+    const {
         register,
         handleSubmit,
         formState: { errors },
@@ -71,7 +71,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                                 <Input id="password" type="password" required {...register('password')} />
                             </Field>
                             <Field>
-                                <Button type="submit">Login</Button>
+                                <Button type="submit" disabled={isPending || isSuccess}>
+                                    {isPending || isSuccess ? 'Logging in...' : 'Login'} 
+                                </Button>
                                 <FieldDescription className="text-center">
                                     Don&apos;t have an account? <a href="#">Sign up</a>
                                 </FieldDescription>

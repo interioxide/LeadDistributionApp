@@ -6,7 +6,7 @@ reset:
 	docker compose down -v
 	$(MAKE) build
 prisma-status:
-	docker compose exec api npx prisma migrate status
+	npx prisma migrate status
 prisma-deploy:
 	npx prisma migrate deploy
 prisma-generate:
