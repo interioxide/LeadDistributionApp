@@ -22,16 +22,16 @@ export class BrokerController {
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.brokerService.findOne(+id);
+        return this.brokerService.findOne(id);
     }
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateBrokerDto: UpdateBrokerDto) {
-        return this.brokerService.update(+id, updateBrokerDto);
+        return this.brokerService.update(id, updateBrokerDto);
     }
 
     @Delete(':id')
     remove(@Param('id') id: string) {
-        return this.brokerService.remove(+id);
+        return this.brokerService.remove(id);
     }
 }

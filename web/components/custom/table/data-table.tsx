@@ -67,11 +67,7 @@ export function DataTable<TData, TValue>({
                             <TableRow key={headerGroup.id} className="hover:bg-transparent">
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead
-                                            key={header.id}
-                                            style={{ width: `${header.getSize()}px` }}
-                                            className={'h-8 px-2 border-r border-border'}
-                                        >
+                                        <TableHead key={header.id} style={{ width: `${header.getSize()}px` }} className={'h-8 px-2 border-r border-border'}>
                                             {header.isPlaceholder ? null : header.column.getCanSort() ? (
                                                 <div
                                                     className={cn(

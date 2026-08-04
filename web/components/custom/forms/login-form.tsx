@@ -72,11 +72,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                             </Field>
                             <Field>
                                 <Button type="submit" disabled={isPending || isSuccess}>
-                                    {isPending || isSuccess ? 'Logging in...' : 'Login'} 
+                                    {isPending || isSuccess ? 'Logging in...' : 'Login'}
                                 </Button>
-                                <FieldDescription className="text-center">
-                                    Don&apos;t have an account? <a href="#">Sign up</a>
-                                </FieldDescription>
                             </Field>
                         </FieldGroup>
                     </form>

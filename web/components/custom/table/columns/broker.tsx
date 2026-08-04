@@ -2,12 +2,12 @@
 
 import { Column, ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Broker } from '@/lib/types/broker';
 import { StatusBadge } from '../../status-badge';
 import { formatWorkingDays } from '@/lib/string';
 import Link from 'next/link';
 import { ChevronRight, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Broker } from '@/lib/types/broker-schema';
 
 export const brokerColumns: ColumnDef<Broker>[] = [
     {
@@ -47,26 +47,21 @@ export const brokerColumns: ColumnDef<Broker>[] = [
     },
     {
         accessorKey: 'workingDays',
+        enableSorting: false,
         header: () => <div className="w-full font-medium">Working days</div>,
-        cell: ({ row }) => <div className="font-medium">{formatWorkingDays(row.original.workingDays || '')}</div>,
+        cell: ({ row }) => <div className="font-medium">{formatWorkingDays(row.original.workingDays || [])}</div>,
     },
     {
-        accessorKey: "actions",
-        header: "",
+        accessorKey: 'actions',
+        header: '',
         enableSorting: false,
         size: 10,
         cell: ({ row }) => (
-            <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-transparent"
-                asChild
-                
-            >
+            <Button variant="ghost" size="icon" className="hover:bg-transparent" asChild>
                 <Link href={`/brokers/${row.original.id}/edit`}>
                     <ChevronRight className="size-4" />
                 </Link>
             </Button>
         ),
-    }
+    },
 ];
