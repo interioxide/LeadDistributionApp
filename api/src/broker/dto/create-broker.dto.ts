@@ -1,7 +1,6 @@
 import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 export class CreateBrokerDto {
-
     @IsString()
     name!: string;
 

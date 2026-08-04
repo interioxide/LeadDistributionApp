@@ -1,4 +1,5 @@
 import { Broker, BrokerValues } from './types/broker-schema';
+import { LeadForm, LeadFormValues } from './types/lead-form-schema';
 import { SearchQuery } from './types/pagination';
 
 export class ApiError extends Error {
@@ -112,7 +113,7 @@ export async function getBrokerById(id: string) {
     return responseJson;
 }
 
-export async function createBroker(broker: Omit<Broker, "id">) {
+export async function createBroker(broker: Omit<Broker, 'id'>) {
     const url = new URL(`/brokers`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
@@ -142,6 +143,39 @@ export async function updateBroker(broker: Broker) {
         credentials: 'include',
     });
 
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function getLeadForm() {
+    const url = new URL('/form', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function createLeadForm(leadForm: LeadFormValues) {
+    const url = new URL('/form', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(leadForm),
+        credentials: 'include',
+    });
     if (!response.ok) {
         const errorData = await response.json().catch(() => null);
         throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);

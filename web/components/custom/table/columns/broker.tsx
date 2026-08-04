@@ -13,7 +13,8 @@ export const brokerColumns: ColumnDef<Broker>[] = [
     {
         accessorKey: 'name',
         header: () => <div className="w-full font-medium">Broker name</div>,
-        cell: ({ row }) => <div className="font-medium">{row.getValue('name')}</div>,
+        cell: ({ row }) => <div className="font-bold">{row.getValue('name')}</div>,
+        size: 250,
     },
     {
         accessorKey: 'status',

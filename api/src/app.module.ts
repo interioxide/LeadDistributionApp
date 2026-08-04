@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
 import { BrokerModule } from './broker/broker.module';
+import { FormModule } from './form/form.module';
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { BrokerModule } from './broker/broker.module';
         UserModule,
         ProfileModule,
         BrokerModule,
+        FormModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -13,10 +13,7 @@ export default function EditBrokerPage() {
     const router = useRouter();
 
     const queryClient = useQueryClient();
-    const {
-        mutate,
-        isPending: isAddBrokerPending,
-    } = useMutation({
+    const { mutate, isPending: isAddBrokerPending } = useMutation({
         mutationFn: createBroker,
         onSuccess: (item) => {
             queryClient.invalidateQueries({
@@ -26,8 +23,8 @@ export default function EditBrokerPage() {
                 description: item.data.name,
                 action: {
                     label: 'View',
-                    onClick: () => router.replace(`/brokers/${item.data.id}/edit`)
-                }
+                    onClick: () => router.replace(`/brokers/${item.data.id}/edit`),
+                },
             });
             router.replace('/brokers');
         },

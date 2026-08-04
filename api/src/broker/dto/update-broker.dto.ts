@@ -1,5 +1,3 @@
-import { CreateBrokerDto } from "./create-broker.dto";
+import { CreateBrokerDto } from './create-broker.dto';
 
-export class UpdateBrokerDto extends CreateBrokerDto {
-
-}
+export class UpdateBrokerDto extends CreateBrokerDto {}

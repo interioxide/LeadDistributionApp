@@ -10,7 +10,7 @@ export function formatWorkingDays(workingDays: string[] = []): string {
 
     const days = workingDays
         .map(Number)
-        .map(d => d - 1) // 1=Mon...7=Sun -> 0=Mon...6=Sun
+        .map((d) => d - 1) // 1=Mon...7=Sun -> 0=Mon...6=Sun
         .sort((a, b) => a - b);
 
     if (days.length === 0) {
@@ -34,20 +34,12 @@ export function formatWorkingDays(workingDays: string[] = []): string {
             continue;
         }
 
-        ranges.push(
-            start === prev
-                ? DAY_LABELS[start]
-                : `${DAY_LABELS[start]}-${DAY_LABELS[prev]}`
-        );
+        ranges.push(start === prev ? DAY_LABELS[start] : `${DAY_LABELS[start]}-${DAY_LABELS[prev]}`);
 
         start = prev = current;
     }
 
-    ranges.push(
-        start === prev
-            ? DAY_LABELS[start]
-            : `${DAY_LABELS[start]}-${DAY_LABELS[prev]}`
-    );
+    ranges.push(start === prev ? DAY_LABELS[start] : `${DAY_LABELS[start]}-${DAY_LABELS[prev]}`);
 
     return ranges.join(', ');
 }

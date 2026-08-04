@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { AlertCircleIcon, BanIcon, CheckCircleIcon } from 'lucide-react';
 
 type Status = 'success' | 'pending' | 'failed';
 
@@ -13,37 +12,37 @@ interface StatusBadgeProps extends React.ComponentProps<typeof Badge> {
 const statusConfig: Record<
     Status,
     {
-        icon: React.ElementType;
-        className: string;
         label: string;
+        badgeClass: string;
+        dotClass: string;
     }
 > = {
     success: {
-        icon: CheckCircleIcon,
         label: 'Successful',
-        className:
-            'rounded-sm border-green-600 text-green-600 dark:border-green-400 dark:text-green-400 [a]:hover:bg-green-600/10 [a]:hover:text-green-600/90 dark:[a]:hover:bg-green-400/10 dark:[a]:hover:text-green-400/90',
+        badgeClass:
+            'bg-green-500/10 text-green-600 border-none focus-visible:outline-none focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40 [a]:hover:bg-green-500/5',
+        dotClass: 'bg-green-600',
     },
     pending: {
-        icon: AlertCircleIcon,
         label: 'Pending',
-        className:
-            'rounded-sm border-amber-600 text-amber-600 dark:border-amber-400 dark:text-amber-400 [a]:hover:bg-amber-600/10 [a]:hover:text-amber-600/90 dark:[a]:hover:bg-amber-400/10 dark:[a]:hover:text-amber-400/90',
+        badgeClass:
+            'bg-amber-500/10 text-amber-600 border-none focus-visible:outline-none focus-visible:ring-amber-500/20 dark:focus-visible:ring-amber-500/40 [a]:hover:bg-amber-500/5',
+        dotClass: 'bg-amber-600',
     },
     failed: {
-        icon: BanIcon,
         label: 'Failed',
-        className: 'rounded-sm border-destructive text-destructive [a]:hover:bg-destructive/10 [a]:hover:text-destructive/90',
+        badgeClass:
+            'bg-destructive/10 text-destructive border-none focus-visible:outline-none focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/5',
+        dotClass: 'bg-destructive',
     },
 };
 
 export function StatusBadge({ status, children, className, ...props }: StatusBadgeProps) {
     const config = statusConfig[status];
-    const Icon = config.icon;
 
     return (
-        <Badge variant="outline" className={cn(config.className, className)} {...props}>
-            <Icon className="size-3" />
+        <Badge className={cn(config.badgeClass, className)} {...props}>
+            <span className={cn('size-1.5 rounded-full', config.dotClass)} aria-hidden="true" />
             {children ?? config.label}
         </Badge>
     );
