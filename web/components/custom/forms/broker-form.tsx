@@ -3,7 +3,7 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { brokerFormSchema, type BrokerFormValues } from '@/lib/types/broker-schema';
+import { brokerSchema, type BrokerValues } from '@/lib/types/broker-schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -27,7 +27,7 @@ const WORKING_DAYS = [
 
 const TIMEZONES = Intl.supportedValuesOf('timeZone');
 
-const EMPTY_DEFAULTS: BrokerFormValues = {
+const EMPTY_DEFAULTS: BrokerValues = {
     name: '',
     isActive: true,
     dailyCap: 10,
@@ -39,16 +39,16 @@ const EMPTY_DEFAULTS: BrokerFormValues = {
 
 interface BrokerFormProps {
     mode: 'add' | 'edit';
-    defaultValues?: Partial<BrokerFormValues>;
-    onSubmit: (values: BrokerFormValues) => void | Promise<void>;
+    defaultValues?: Partial<BrokerValues>;
+    onSubmit: (values: BrokerValues) => void | Promise<void>;
     isSubmitting?: boolean;
 }
 
 export function BrokerForm({ mode, defaultValues, onSubmit, isSubmitting }: BrokerFormProps) {
     const router = useRouter();
 
-    const form = useForm<BrokerFormValues>({
-        resolver: zodResolver(brokerFormSchema),
+    const form = useForm<BrokerValues>({
+        resolver: zodResolver(brokerSchema),
         defaultValues: { ...EMPTY_DEFAULTS, ...defaultValues },
     });
 

@@ -1,4 +1,4 @@
-import { Broker, BrokerFormValues } from './types/broker-schema';
+import { Broker, BrokerValues } from './types/broker-schema';
 import { SearchQuery } from './types/pagination';
 
 export class ApiError extends Error {

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { BrokerForm } from '@/components/custom/forms/broker-form';
-import type { BrokerFormValues } from '@/lib/types/broker-schema';
+import type { BrokerValues } from '@/lib/types/broker-schema';
 import { PageHeader } from '@/components/custom/page-header';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ApiError, getBrokerById, updateBroker } from '@/lib/api';
@@ -36,7 +36,7 @@ export default function EditBrokerPage() {
         },
     });
 
-    function handleSubmit(formData: BrokerFormValues) {
+    function handleSubmit(formData: BrokerValues) {
         mutate({ id, ...formData });
     }
 

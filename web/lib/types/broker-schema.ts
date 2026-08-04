@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const TIME_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/; // "HH:MM", 24h
 
-export const brokerFormSchema = z
+export const brokerSchema = z
     .object({
         name: z.string().trim().min(1, 'Broker name is required'),
         isActive: z.boolean(),
@@ -17,8 +17,8 @@ export const brokerFormSchema = z
         path: ['closingTime'],
     });
 
-export type BrokerFormValues = z.infer<typeof brokerFormSchema>;
+export type BrokerValues = z.infer<typeof brokerSchema>;
 
-export interface Broker extends BrokerFormValues {
+export interface Broker extends BrokerValues {
     id: string;
 }

@@ -83,8 +83,8 @@ const menuItems: MenuGroup[] = [
                 icon: Users,
             },
             {
-                title: 'Form',
-                url: '/forms',
+                title: 'Lead Form',
+                url: '/lead-form',
                 icon: FileText,
             },
             {
