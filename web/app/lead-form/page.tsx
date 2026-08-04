@@ -26,6 +26,7 @@ export default function LeadFormPage() {
     const router = useRouter();
     const [baseUrl, setBaseUrl] = useState('');
     const [formExists, setFormExists] = useState<boolean>(false);
+    const [formattedDateCreated, setFormattedDateCreated] = useState<string>('');
 
     const form = useForm<LeadFormValues>({
         resolver: zodResolver(leadFormSchema),
@@ -67,12 +68,21 @@ export default function LeadFormPage() {
                     name: itemData.data.name ?? '',
                     slug: itemData.data.slug ?? '',
                 });
+
+                // Convert the created date to current user time.
+                const dateCreated = new Date(itemData.data.createdAt);
+                const formattedDate = new Intl.DateTimeFormat(undefined, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                }).format(dateCreated);
+                setFormattedDateCreated(formattedDate)
+
             } else {
                 setFormExists(false);
                 return;
             }
         }
-    }, [itemData, form]);
+    }, [itemData, form, formattedDateCreated]);
 
     function onSubmit(data: LeadFormValues) {
         mutate(data);
@@ -85,6 +95,7 @@ export default function LeadFormPage() {
             {isItemDataSuccess ? (
                 <form id="lead-form" onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="flex min-h-screen flex-1 flex-col">
+
                         <FieldGroup className="w-full p-10">
                             <Controller
                                 name="name"
@@ -136,6 +147,11 @@ export default function LeadFormPage() {
                                 )}
                             />
                         </FieldGroup>
+                        {formExists && (
+                            <FieldGroup className="w-full px-10 py-2">
+                                <p className="text-xs font-mono"><strong>Date created:</strong> {formattedDateCreated}</p>
+                            </FieldGroup>
+                        )}
 
                         <FieldGroup className="sticky bottom-0 mt-auto flex w-full flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 bg-background">
                             <Button type="button" variant="outline" onClick={() => router?.back()} className="gap-1.5 cursor-pointer">
