@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { DataResponseDto } from '@app/common/dto/data-response.dto';
@@ -8,6 +8,8 @@ import { LeadStatus } from './enums/lead-status.enum';
 import { DateTime } from 'luxon';
 import { Broker } from '@generated/prisma/client';
 import { EligibleBroker } from './interfaces/eligible-broker.interface';
+import { PaginationMetaDataDto, PaginationQueryDto, PaginationResponseDto } from '@app/common/dto/pagination.dto';
+import { LeadWhereInput } from '@generated/prisma/models';
 
 @Injectable()
 export class LeadService {
@@ -71,8 +73,45 @@ export class LeadService {
         return new DataResponseDto(createLead);
     }
 
-    findAll() {
-        return `This action returns all lead`;
+    async findAll(query: PaginationQueryDto, distributionId: string | null = null) {
+        const { page, limit, offset, search } = query;
+        const whereInput: LeadWhereInput = {
+            name: {
+                contains: search,
+            },
+        };
+
+        if (distributionId) {
+            whereInput.distributionId = distributionId;
+        }
+
+        const [data, totalItems] = await Promise.all([
+            this.prismaService.lead.findMany({
+                skip: offset,
+                take: limit,
+                where: whereInput,
+                orderBy: {
+                    ...(query.orderBy && query.orderDirection && { [query.orderBy]: query.orderDirection }),
+                },
+                include: {
+                    broker: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                    form: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                },
+            }),
+            this.prismaService.lead.count({
+                where: whereInput,
+            }),
+        ]);
+        const metadata = new PaginationMetaDataDto(page, limit, totalItems);
+        return new PaginationResponseDto(data, metadata);
     }
 
     #isWithinWorkingHours(broker: Broker): boolean {
@@ -156,7 +195,7 @@ export class LeadService {
         const computeDeficit = (totalSentToday: number, brokerPercentage: number, brokerSentToday: number): number => {
             const targetAfterLead = ((totalSentToday + 1) * brokerPercentage) / 100;
             return targetAfterLead - brokerSentToday;
-        }
+        };
 
         let best: EligibleBroker | null = null;
         let bestDeficit = -Infinity;
@@ -173,16 +212,16 @@ export class LeadService {
 
     async #getDistributionSentToday(distributionId: string): Promise<number> {
         // using UTC calendar
-        const startOfDayUtc = DateTime.utc().startOf("day").toJSDate();
-        const endOfDayUtc = DateTime.utc().endOf("day").toJSDate();
+        const startOfDayUtc = DateTime.utc().startOf('day').toJSDate();
+        const endOfDayUtc = DateTime.utc().endOf('day').toJSDate();
 
         return this.prismaService.lead.count({
             where: {
                 distributionId,
                 status: LeadStatus.SENT,
-                createdAt: { 
-                    gte: startOfDayUtc, 
-                    lte: endOfDayUtc 
+                createdAt: {
+                    gte: startOfDayUtc,
+                    lte: endOfDayUtc,
                 },
             },
         });

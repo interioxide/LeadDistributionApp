@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Ip, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Ip, UseGuards, Query } from '@nestjs/common';
 import { LeadService } from './lead.service';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '@app/common/dto/pagination.dto';
 
 @Controller('leads')
 export class LeadController {
@@ -19,7 +20,13 @@ export class LeadController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    findAll() {
-        return this.leadService.findAll();
+    findAll(@Query() query: PaginationQueryDto) {
+        return this.leadService.findAll(query);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(':distributionId')
+    findAllByDistribution(@Param('distributionId') distributionId: string, @Query() query: PaginationQueryDto) {
+        return this.leadService.findAll(query, distributionId);
     }
 }
