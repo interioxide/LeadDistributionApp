@@ -1,6 +1,6 @@
 'use client';
 import { PageHeader } from '@/components/custom/page-header';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,7 +10,7 @@ import { PaginationState, SortingState } from '@tanstack/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { getBrokers } from '@/lib/api';
 import { DataTable } from '@/components/custom/table/data-table';
-import { DataTableSkeleton } from '@/components/custom/skeleton/data-table-skeleton';
+import { DataTableSkeleton } from '@/components/custom/loaders/data-table-skeleton';
 import { brokerColumns } from '@/components/custom/table/columns/broker';
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
 
@@ -74,9 +74,9 @@ export default function BrokersPage() {
                                     </InputGroupAddon>
                                     <InputGroupAddon align="inline-end">
                                         {isItemDataSuccess && (
-                                            <>
+                                            <Fragment>
                                                 {itemData.metadata.totalItems} result{itemData.metadata.totalItems !== 1 && 's'}
-                                            </>
+                                            </Fragment>
                                         )}
                                     </InputGroupAddon>
                                     <InputGroupAddon align="inline-end">

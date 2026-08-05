@@ -7,7 +7,7 @@ import type { BrokerValues } from '@/lib/types/broker-schema';
 import { PageHeader } from '@/components/custom/page-header';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ApiError, getBrokerById, updateBroker } from '@/lib/api';
-import { BrokerFormSkeleton } from '@/components/custom/skeleton/broker-form-skeleton';
+import { BrokerFormSkeleton } from '@/components/custom/loaders/broker-form-skeleton';
 import { toast } from 'sonner';
 
 export default function EditBrokerPage() {
@@ -15,7 +15,7 @@ export default function EditBrokerPage() {
 
     const { data: brokerData, isSuccess: isBrokerSuccess } = useQuery({
         queryFn: () => getBrokerById(id),
-        queryKey: ['brokers'],
+        queryKey: ['brokers', id],
     });
 
     const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export default function EditBrokerPage() {
         mutationFn: updateBroker,
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['brokers'],
+                queryKey: ['brokers', id],
             });
             toast.success('Broker successfully updated.');
         },

@@ -1,13 +1,28 @@
-import { Broker, BrokerValues } from './types/broker-schema';
+import { Broker } from './types/broker-schema';
+import { AddBrokerToDistributionValues, Distribution, DistributionBroker, DistributionBrokersFormValues } from './types/distribution-schema';
 import { LeadForm, LeadFormValues } from './types/lead-form-schema';
-import { SearchQuery } from './types/pagination';
+import { PaginationMetadata, SearchQuery } from './types/pagination';
 
-export class ApiError extends Error {
+type BrokerWorkingDaysList = Omit<Broker, 'workingDays'> & { workingDays: string[] };
+type BrokerWorkingDaysComma = Omit<Broker, 'workingDays'> & { workingDays: string };
+interface DistributionBrokerApi {
+    id: string;
+    distributionId: string;
+    brokerId: string;
+    percentage: number;
+    isActive: boolean;
+    broker: {
+        name: string;
+        isActive: boolean;
+    } | null;
+}
+
+export class ApiError<T = unknown> extends Error {
     static readonly defaultErrorMsg: string = 'API request failed';
     status: number | string;
-    data: any;
+    data: T;
 
-    constructor(message: string, status: number | string, data: unknown) {
+    constructor(message: string, status: number | string, data: T) {
         super(message);
         this.status = status;
         this.data = data;
@@ -59,7 +74,7 @@ export async function getCurrentUser() {
     return response.json();
 }
 
-export async function getBrokers(query: SearchQuery = {}) {
+export async function getBrokers(query: SearchQuery = {}): Promise<{ data: BrokerWorkingDaysList[]; metadata: PaginationMetadata }> {
     const url = new URL('/brokers', process.env.NEXT_PUBLIC_API_URL);
     url.search = new URLSearchParams({
         ...(query.search && { search: query.search }),
@@ -85,7 +100,9 @@ export async function getBrokers(query: SearchQuery = {}) {
         throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
     }
     const responseJson = await response.json();
-    responseJson.data = responseJson.data.map((item: any) => {
+    const data = responseJson.data as BrokerWorkingDaysComma[];
+
+    responseJson.data = data.map((item) => {
         const workingDays = item.workingDays.split(',');
         return {
             ...item,
@@ -95,7 +112,7 @@ export async function getBrokers(query: SearchQuery = {}) {
     return responseJson;
 }
 
-export async function getBrokerById(id: string) {
+export async function getBrokerById(id: string): Promise<{ data: Broker }> {
     const url = new URL(`/brokers/${id.trim()}`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'GET',
@@ -109,11 +126,12 @@ export async function getBrokerById(id: string) {
         throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
     }
     const responseJson = await response.json();
-    responseJson.data.workingDays = responseJson.data.workingDays.split(',');
+    const data = responseJson.data as Omit<Broker, 'workingDays'> & { workingDays: string };
+    responseJson.data.workingDays = data.workingDays.split(',');
     return responseJson;
 }
 
-export async function createBroker(broker: Omit<Broker, 'id'>) {
+export async function createBroker(broker: Omit<Broker, 'id'>): Promise<{ data: Broker }> {
     const url = new URL(`/brokers`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
@@ -131,7 +149,7 @@ export async function createBroker(broker: Omit<Broker, 'id'>) {
     return response.json();
 }
 
-export async function updateBroker(broker: Broker) {
+export async function updateBroker(broker: Broker): Promise<{ data: Broker }> {
     const { id, ...data } = broker;
     const url = new URL(`/brokers/${broker.id.trim()}`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
@@ -150,7 +168,7 @@ export async function updateBroker(broker: Broker) {
     return response.json();
 }
 
-export async function getLeadForm() {
+export async function getLeadForm(): Promise<{ data: LeadForm }> {
     const url = new URL('/form', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'GET',
@@ -166,7 +184,7 @@ export async function getLeadForm() {
     return response.json();
 }
 
-export async function createLeadForm(leadForm: LeadFormValues) {
+export async function createLeadForm(leadForm: LeadFormValues): Promise<{ data: LeadForm }> {
     const url = new URL('/form', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
@@ -174,6 +192,135 @@ export async function createLeadForm(leadForm: LeadFormValues) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(leadForm),
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function createDistribution(): Promise<{ data: Distribution }> {
+    const url = new URL('/distribution', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function getDistribution(): Promise<{ data: Distribution }> {
+    const url = new URL('/distribution', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function getDistributionBrokers(query: SearchQuery = {}): Promise<{ data: DistributionBroker[]; metadata: PaginationMetadata }> {
+    const url = new URL('/distribution/brokers', process.env.NEXT_PUBLIC_API_URL);
+    url.search = new URLSearchParams({
+        ...(query.search && { search: query.search }),
+        ...(query.pagination && {
+            page: (query.pagination.pageIndex + 1).toString(),
+            limit: query.pagination.pageSize.toString(),
+        }),
+        ...(query.sorting && {
+            orderBy: query.sorting.at(0)?.id,
+            orderDirection: query.sorting.at(0)?.desc ? 'desc' : 'asc',
+        }),
+    }).toString();
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+
+    const responseJson = await response.json();
+    const data = responseJson.data as DistributionBrokerApi[];
+
+    responseJson.data = data.map((item) => {
+        const normalizeObj = {
+            brokerName: item.broker?.name || null,
+            brokerIsActive: item.broker?.isActive || null,
+            ...item,
+        };
+        const { broker, ...mapped } = normalizeObj;
+        return mapped;
+    });
+    return responseJson;
+}
+
+export async function addDistributionBroker(brokerToDistributionValues: AddBrokerToDistributionValues): Promise<{ data: DistributionBroker }> {
+    const url = new URL('/distribution/broker', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(brokerToDistributionValues),
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function removeDistributionBroker(brokerId: string): Promise<{ data: { count: number } }> {
+    const url = new URL(`/distribution/${brokerId}`, process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function saveDistributionSettings(settings: DistributionBrokersFormValues): Promise<{ data: { count: number }[] }> {
+    const normalized = settings.brokers.map((setting) => {
+        const { brokerIsActive, brokerName, ...newSetting } = setting;
+        return newSetting;
+    });
+
+    const url = new URL('/distribution/settings', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            brokers: normalized
+        }),
         credentials: 'include',
     });
     if (!response.ok) {

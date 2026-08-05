@@ -64,7 +64,7 @@ export function BrokerForm({ mode, defaultValues, onSubmit, isSubmitting }: Brok
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="broker-name">Broker name</FieldLabel>
                                     <Input {...field} id="broker-name" placeholder="Broker A - Manila" aria-invalid={fieldState.invalid} />
-                                    {fieldState.invalid && <FieldError className="text-xs" errors={[fieldState.error]} />}
+                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )}
                         />
@@ -105,7 +105,7 @@ export function BrokerForm({ mode, defaultValues, onSubmit, isSubmitting }: Brok
                                         placeholder="10"
                                         aria-invalid={fieldState.invalid}
                                     />
-                                    {fieldState.invalid && <FieldError className="text-xs" errors={[fieldState.error]} />}
+                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )}
                         />
@@ -128,7 +128,7 @@ export function BrokerForm({ mode, defaultValues, onSubmit, isSubmitting }: Brok
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {fieldState.invalid && <FieldError className="text-xs" errors={[fieldState.error]} />}
+                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )}
                         />
@@ -140,7 +140,7 @@ export function BrokerForm({ mode, defaultValues, onSubmit, isSubmitting }: Brok
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="broker-opening-time">Opening time</FieldLabel>
                                     <TimePicker id="broker-opening-time" value={field.value} onChange={field.onChange} />
-                                    {fieldState.invalid && <FieldError className="text-xs" errors={[fieldState.error]} />}
+                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )}
                         />
@@ -152,7 +152,7 @@ export function BrokerForm({ mode, defaultValues, onSubmit, isSubmitting }: Brok
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="broker-closing-time">Closing time</FieldLabel>
                                     <TimePicker id="broker-closing-time" value={field.value} onChange={field.onChange} />
-                                    {fieldState.invalid && <FieldError className="text-xs" errors={[fieldState.error]} />}
+                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )}
                         />
@@ -177,7 +177,7 @@ export function BrokerForm({ mode, defaultValues, onSubmit, isSubmitting }: Brok
                                         </ToggleGroupItem>
                                     ))}
                                 </ToggleGroup>
-                                {fieldState.invalid && <FieldError className="text-xs" errors={[fieldState.error]} />}
+                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                             </Field>
                         )}
                     />

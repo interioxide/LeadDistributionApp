@@ -75,8 +75,7 @@ export default function LeadFormPage() {
                     dateStyle: 'medium',
                     timeStyle: 'short',
                 }).format(dateCreated);
-                setFormattedDateCreated(formattedDate)
-
+                setFormattedDateCreated(formattedDate);
             } else {
                 setFormExists(false);
                 return;
@@ -95,7 +94,6 @@ export default function LeadFormPage() {
             {isItemDataSuccess ? (
                 <form id="lead-form" onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="flex min-h-screen flex-1 flex-col">
-
                         <FieldGroup className="w-full p-10">
                             <Controller
                                 name="name"
@@ -149,7 +147,9 @@ export default function LeadFormPage() {
                         </FieldGroup>
                         {formExists && (
                             <FieldGroup className="w-full px-10 py-2">
-                                <p className="text-xs font-mono"><strong>Date created:</strong> {formattedDateCreated}</p>
+                                <p className="text-xs font-mono">
+                                    <strong>Created:</strong> {formattedDateCreated}
+                                </p>
                             </FieldGroup>
                         )}
 
