@@ -9,6 +9,8 @@ import { UserModule } from './user/user.module';
 import { ProfileModule } from './profile/profile.module';
 import { BrokerModule } from './broker/broker.module';
 import { FormModule } from './form/form.module';
+import { DistributionModule } from './distribution/distribution.module';
+import { LeadModule } from './lead/lead.module';
 
 @Module({
     imports: [
@@ -22,6 +24,8 @@ import { FormModule } from './form/form.module';
         ProfileModule,
         BrokerModule,
         FormModule,
+        DistributionModule,
+        LeadModule,
     ],
     controllers: [AppController],
     providers: [AppService],

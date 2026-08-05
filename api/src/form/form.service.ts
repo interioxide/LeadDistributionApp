@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateFormDto } from './dto/create-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
 import { PrismaService } from '@app/prisma/prisma.service';
@@ -9,8 +9,12 @@ export class FormService {
     constructor(private prismaService: PrismaService) {}
 
     async create(createFormDto: CreateFormDto) {
+        const form = await this.findOne();
+        if (form.data) {
+            throw new ConflictException('The form already exists.');
+        }
         const response = await this.prismaService.form.create({
-            data: createFormDto
+            data: createFormDto,
         });
         return new DataResponseDto(response);
     }
@@ -18,17 +22,18 @@ export class FormService {
     async findOne() {
         const response = await this.prismaService.form.findFirst({
             orderBy: {
-                createdAt: 'asc'
-            }
+                createdAt: 'asc',
+            },
         });
         return new DataResponseDto(response);
     }
 
-    update(id: number, updateFormDto: UpdateFormDto) {
-        return `This action updates a #${id} form`;
-    }
-
-    remove(id: number) {
-        return `This action removes a #${id} form`;
+    async findOneBySlug(slug: string) {
+        const response = await this.prismaService.form.findFirst({
+            where: {
+                slug,
+            },
+        });
+        return new DataResponseDto(response);
     }
 }

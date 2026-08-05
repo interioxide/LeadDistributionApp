@@ -11,3 +11,20 @@ export const leadSchema = z.object({
 });
 
 export type LeadValues = z.infer<typeof leadSchema>;
+
+export enum LeadStatus {
+    SENT = 'sent',
+    UNSENT = 'unsent',
+    DUPLICATE = 'duplicate',
+    failed = 'failed',
+}
+
+export interface Lead extends LeadValues {
+    id: string;
+    ipAddress: string;
+    formId: string;
+    distributionId: string;
+    brokerId: string | null;
+    status: LeadStatus;
+    createdAt: string;
+}

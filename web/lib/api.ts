@@ -1,6 +1,7 @@
 import { Broker } from './types/broker-schema';
 import { AddBrokerToDistributionValues, Distribution, DistributionBroker, DistributionBrokersFormValues } from './types/distribution-schema';
 import { LeadForm, LeadFormValues } from './types/lead-form-schema';
+import { Lead, LeadValues } from './types/lead-schema';
 import { PaginationMetadata, SearchQuery } from './types/pagination';
 
 type BrokerWorkingDaysList = Omit<Broker, 'workingDays'> & { workingDays: string[] };
@@ -319,8 +320,25 @@ export async function saveDistributionSettings(settings: DistributionBrokersForm
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            brokers: normalized
+            brokers: normalized,
         }),
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function submitLead(leadValues: LeadValues & { slug: string }): Promise<{ data: Lead }> {
+    const url = new URL(`leads/${leadValues.slug.trim()}`, process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(leadValues),
         credentials: 'include',
     });
     if (!response.ok) {

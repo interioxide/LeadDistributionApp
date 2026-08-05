@@ -29,9 +29,4 @@ export class BrokerController {
     update(@Param('id') id: string, @Body() updateBrokerDto: UpdateBrokerDto) {
         return this.brokerService.update(id, updateBrokerDto);
     }
-
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.brokerService.remove(id);
-    }
 }

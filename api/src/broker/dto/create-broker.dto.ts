@@ -1,7 +1,8 @@
-import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 export class CreateBrokerDto {
     @IsString()
+    @MaxLength(255)
     name!: string;
 
     @IsBoolean()

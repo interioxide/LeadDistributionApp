@@ -15,7 +15,7 @@ export class PaginationQueryDto {
     @Type(() => Number)
     @IsInt()
     @Min(1)
-    @Max(500)
+    @Max(1000)
     limit: number = 10;
 
     @IsString()

@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import type { AddBrokerToDistributionValues, DistributionBroker, DistributionBrokersFormValues } from '@/lib/types/distribution-schema';
 import { DistributionForm } from '@/components/custom/forms/distribution-form';
 import { PageHeader } from '@/components/custom/page-header';
@@ -26,19 +25,20 @@ export default function DistributionPage() {
     const { data: formData, isSuccess: isFormDataSuccess } = useQuery({
         queryFn: getLeadForm,
         queryKey: ['leadForm'],
+        refetchOnMount: 'always',
     });
 
     // Retrieves distribution
     const { data: distributionData, isSuccess: isDistributionSuccess } = useQuery({
         queryFn: getDistribution,
         queryKey: ['distribution'],
+        refetchOnMount: 'always',
     });
 
     // Create Distribution
     const {
         mutate: createDistributionMutate,
         isPending: isCreateDistributionPending,
-        isSuccess: isCreateDistributionSuccess,
     } = useMutation({
         mutationFn: createDistribution,
         onSuccess: () => {
@@ -59,6 +59,7 @@ export default function DistributionPage() {
                 pagination: { pageIndex: 0, pageSize: 1000 },
             }),
         queryKey: ['brokers'],
+        refetchOnMount: 'always',
     });
 
     // Retrieves distribution brokers
@@ -68,13 +69,11 @@ export default function DistributionPage() {
                 pagination: { pageIndex: 0, pageSize: 1000 },
             }),
         queryKey: ['distributionBrokers'],
+        refetchOnMount: 'always',
     });
 
     // Add brokers to distribution
-    const {
-        mutate: addDistributionBrokerMutate,
-        isPending: isAddDistributionBrokerPending,
-    } = useMutation({
+    const { mutate: addDistributionBrokerMutate, isPending: isAddDistributionBrokerPending } = useMutation({
         mutationFn: addDistributionBroker,
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -106,10 +105,7 @@ export default function DistributionPage() {
     });
 
     // Save distribution settings
-    const {
-        mutate: saveDistributionSettingsMutate,
-        isPending: isSaveDistributionSettingsPending,
-    } = useMutation({
+    const { mutate: saveDistributionSettingsMutate, isPending: isSaveDistributionSettingsPending } = useMutation({
         mutationFn: saveDistributionSettings,
         onSuccess: () => {
             queryClient.invalidateQueries({

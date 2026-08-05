@@ -63,8 +63,4 @@ export class BrokerService {
         });
         return new DataResponseDto(response);
     }
-
-    remove(id: string) {
-        return `This action removes a #${id} broker`;
-    }
 }

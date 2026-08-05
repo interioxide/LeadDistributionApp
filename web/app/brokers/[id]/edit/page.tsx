@@ -16,6 +16,7 @@ export default function EditBrokerPage() {
     const { data: brokerData, isSuccess: isBrokerSuccess } = useQuery({
         queryFn: () => getBrokerById(id),
         queryKey: ['brokers', id],
+        refetchOnMount: 'always',
     });
 
     const queryClient = useQueryClient();
@@ -27,7 +28,7 @@ export default function EditBrokerPage() {
         mutationFn: updateBroker,
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['brokers', id],
+                queryKey: ['brokers'],
             });
             toast.success('Broker successfully updated.');
         },

@@ -3,7 +3,6 @@ import { PageHeader } from '@/components/custom/page-header';
 import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Plus, Search, SearchIcon } from 'lucide-react';
 import { PaginationState, SortingState } from '@tanstack/react-table';
@@ -37,6 +36,7 @@ export default function BrokersPage() {
                 sorting,
             }),
         queryKey: ['brokers', search, pagination, sorting],
+        refetchOnMount: 'always',
     });
 
     return (
