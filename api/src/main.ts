@@ -22,6 +22,7 @@ async function bootstrap() {
     app.use(helmet());
     app.use(compression());
 
+    app.getHttpAdapter().getInstance().set('trust proxy', true);
     await app.listen(configService.get<number>('port') ?? 3000);
 }
 bootstrap();

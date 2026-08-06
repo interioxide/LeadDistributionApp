@@ -1,19 +1,22 @@
-import { Controller, Get, Post, Body, Param, Ip, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Ip, UseGuards, Query, Req } from '@nestjs/common';
 import { LeadService } from './lead.service';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { PaginationQueryDto } from '@app/common/dto/pagination.dto';
 import { AssignLeadDto } from './dto/assign-lead.dto';
 import { LeadsPaginationQueryDto } from './dto/leads-pagination-query.dto';
+import type { Request } from 'express';
 
 @Controller('leads')
 export class LeadController {
     constructor(private readonly leadService: LeadService) {}
 
     @Post(':slug')
-    create(@Body() createLeadDto: CreateLeadDto, @Ip() ipAddress: string, @Param('slug') slug: string) {
+    create(@Body() createLeadDto: CreateLeadDto, @Param('slug') slug: string, @Req() req: Request) {
+        const ip = req.headers['x-real-ip'] || req.socket.remoteAddress || '';
+
         return this.leadService.create({
-            ipAddress,
+            ipAddress: ip.toString(),
             slug,
             ...createLeadDto,
         });

@@ -31,6 +31,12 @@ export class ApiError<T = unknown> extends Error {
     }
 }
 
+async function getClientIpAddress(): Promise<string> {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const { ip } = await response.json();
+    return ip;
+}
+
 export async function loginUser(data: { email: string; password: string }) {
     const url = new URL('/api/auth/login', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
@@ -341,6 +347,7 @@ export async function submitLead(leadValues: LeadValues & { slug: string }): Pro
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'x-real-ip': await getClientIpAddress(),
         },
         body: JSON.stringify(leadValues),
         credentials: 'include',
