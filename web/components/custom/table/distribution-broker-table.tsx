@@ -130,14 +130,15 @@ export function DistributionBrokerTable({ rows, onSave, onRemove, isSaving }: Di
                     </CardContent>
                 </Card>
             </div>
-
-            <FieldGroup className="sticky bottom-0 mt-auto flex w-full flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 bg-background">
-                <p className="text-sm text-muted-foreground">Total percentage across active-in-distribution brokers: {totalActivePercentage}%</p>
-                <Button type="submit" disabled={isSaving} className="cursor-pointer">
-                    <Save />
-                    {isSaving ? 'Saving...' : 'Save changes'}
-                </Button>
-            </FieldGroup>
+            {fields.length > 0 && (
+                <FieldGroup className="sticky bottom-0 mt-auto flex w-full flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 bg-background">
+                    <p className="text-sm text-muted-foreground">Total percentage across active-in-distribution brokers: {totalActivePercentage}%</p>
+                    <Button type="submit" disabled={isSaving} className="cursor-pointer">
+                        <Save />
+                        {isSaving ? 'Saving...' : 'Save changes'}
+                    </Button>
+                </FieldGroup>
+            )}
         </form>
     );
 }

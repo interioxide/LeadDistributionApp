@@ -98,14 +98,6 @@ export function NavUser({
                             )}
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
-                                Account
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout} disabled={logoutUserMutation.isPending} className="cursor-pointer">
                             <LogOut />
                             Log out
