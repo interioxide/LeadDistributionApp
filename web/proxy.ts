@@ -10,6 +10,12 @@ export async function proxy(request: NextRequest) {
     const baseUrl = request.nextUrl.origin;
 
     const isAuthenticated = Boolean(accessToken);
+    // Redirect root path
+    if (pathname === '/') {
+        return NextResponse.redirect(
+            new URL(isAuthenticated ? '/dashboard' : '/login', baseUrl)
+        );
+    }
 
     const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
     const isPublicOnlyRoute = publicOnlyRoutes.some((route) => pathname.startsWith(route));
