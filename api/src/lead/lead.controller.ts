@@ -4,6 +4,7 @@ import { CreateLeadDto } from './dto/create-lead.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
 import { JwtAuthGuard } from '@app/auth/guards/jwt-auth.guard';
 import { PaginationQueryDto } from '@app/common/dto/pagination.dto';
+import { AssignLeadDto } from './dto/assign-lead.dto';
 
 @Controller('leads')
 export class LeadController {
@@ -28,5 +29,11 @@ export class LeadController {
     @Get(':distributionId')
     findAllByDistribution(@Param('distributionId') distributionId: string, @Query() query: PaginationQueryDto) {
         return this.leadService.findAll(query, distributionId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post(':id/assign')
+    assignLead(@Param('id') id: string, @Body() assignLeadDto: AssignLeadDto) {
+        return this.leadService.assignLead(id, assignLeadDto.brokerId);
     }
 }

@@ -11,6 +11,7 @@ import { BrokerModule } from './broker/broker.module';
 import { FormModule } from './form/form.module';
 import { DistributionModule } from './distribution/distribution.module';
 import { LeadModule } from './lead/lead.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { LeadModule } from './lead/lead.module';
         FormModule,
         DistributionModule,
         LeadModule,
+        MetricsModule,
     ],
     controllers: [AppController],
     providers: [AppService],

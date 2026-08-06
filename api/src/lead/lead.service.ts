@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Query } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { DataResponseDto } from '@app/common/dto/data-response.dto';
@@ -76,9 +76,20 @@ export class LeadService {
     async findAll(query: PaginationQueryDto, distributionId: string | null = null) {
         const { page, limit, offset, search } = query;
         const whereInput: LeadWhereInput = {
-            name: {
-                contains: search,
-            },
+            ...(search && {
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                        },
+                    },
+                    {
+                        email: {
+                            contains: search,
+                        },
+                    },
+                ],
+            }),
         };
 
         if (distributionId) {
@@ -112,6 +123,41 @@ export class LeadService {
         ]);
         const metadata = new PaginationMetaDataDto(page, limit, totalItems);
         return new PaginationResponseDto(data, metadata);
+    }
+
+    async assignLead(leadId: string, brokerId: string) {
+        const lead = await this.prismaService.lead.count({
+            where: {
+                id: leadId,
+                status: LeadStatus.UNSENT,
+            },
+        });
+
+        const broker = await this.prismaService.broker.count({
+            where: {
+                id: brokerId,
+            },
+        });
+
+        if (!lead) {
+            throw new NotFoundException('The lead does not exist.');
+        }
+
+        if (!broker) {
+            throw new NotFoundException('The broker does not exist.');
+        }
+
+        const result = this.prismaService.lead.update({
+            where: {
+                id: leadId,
+            },
+            data: {
+                brokerId,
+                status: LeadStatus.SENT,
+            },
+        });
+
+        return result;
     }
 
     #isWithinWorkingHours(broker: Broker): boolean {
