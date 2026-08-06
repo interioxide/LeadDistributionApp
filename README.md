@@ -100,6 +100,7 @@ npm run build
 cd ../web
 npm run build
 
+cd ../
 pm2 start ecosystem.config.js
 ```
 
