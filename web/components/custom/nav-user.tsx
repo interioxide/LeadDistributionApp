@@ -39,7 +39,7 @@ export function NavUser({
             toast.error('Something went wrong.');
         },
     });
-    const currentUserQuery = useQuery({
+    const { data: userData, isSuccess: isUserDataSuccess } = useQuery({
         queryFn: getCurrentUser,
         queryKey: ['currentUser'],
     });
@@ -47,14 +47,24 @@ export function NavUser({
     const handleLogout = () => {
         logoutUserMutation.mutate();
     };
-    const currentUser = currentUserQuery.data;
 
     return (
         <SidebarMenu>
             <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        {currentUserQuery.isLoading ? (
+                        {isUserDataSuccess ? (
+                            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                                <Avatar className="h-8 w-8 rounded-lg">
+                                    <AvatarFallback className="rounded-lg">{getNameInitials(userData.data.name || '')}</AvatarFallback>
+                                </Avatar>
+                                <div className="grid flex-1 text-left text-sm leading-tight">
+                                    <span className="truncate font-medium">{userData.data.name}</span>
+                                    <span className="truncate text-xs">{userData.data.email}</span>
+                                </div>
+                                <ChevronsUpDown className="ml-auto size-4" />
+                            </SidebarMenuButton>
+                        ) : (
                             <SidebarMenuButton size="lg" disabled className="pointer-events-none">
                                 <Skeleton className="h-8 w-8 rounded-lg" />
 
@@ -64,17 +74,6 @@ export function NavUser({
                                 </div>
 
                                 <Skeleton className="ml-auto h-4 w-4 rounded" />
-                            </SidebarMenuButton>
-                        ) : (
-                            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                                <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarFallback className="rounded-lg">{getNameInitials(currentUser.data.name || '')}</AvatarFallback>
-                                </Avatar>
-                                <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">{currentUser.data.name}</span>
-                                    <span className="truncate text-xs">{currentUser.data.email}</span>
-                                </div>
-                                <ChevronsUpDown className="ml-auto size-4" />
                             </SidebarMenuButton>
                         )}
                     </DropdownMenuTrigger>
@@ -86,14 +85,14 @@ export function NavUser({
                         sideOffset={4}
                     >
                         <DropdownMenuLabel className="p-0 font-normal">
-                            {currentUserQuery.isSuccess && (
+                            {isUserDataSuccess && (
                                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                     <Avatar className="h-8 w-8 rounded-lg">
-                                        <AvatarFallback className="rounded-lg">{getNameInitials(currentUser.data.name || '')}</AvatarFallback>
+                                        <AvatarFallback className="rounded-lg">{getNameInitials(userData.data.name || '')}</AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-medium">{currentUser.data.name}</span>
-                                        <span className="truncate text-xs">{currentUser.data.email}</span>
+                                        <span className="truncate font-medium">{userData.data.name}</span>
+                                        <span className="truncate text-xs">{userData.data.email}</span>
                                     </div>
                                 </div>
                             )}

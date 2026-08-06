@@ -3,10 +3,10 @@ import { AppSidebar } from '@/components/custom/app-sidebar';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Brokers',
+    title: 'Leads',
 };
 
-export default function BrokersLayout({ children }: { children: React.ReactNode }) {
+export default function LeadsLayout({ children }: { children: React.ReactNode }) {
     return (
         <SidebarProvider
             style={

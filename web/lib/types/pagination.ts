@@ -4,6 +4,7 @@ export type SearchQuery = {
     search?: string;
     pagination?: PaginationState;
     sorting?: SortingState;
+    brokerId?: string;
 };
 
 export interface PaginationMetadata {

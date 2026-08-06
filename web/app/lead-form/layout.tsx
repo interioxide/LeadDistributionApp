@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     title: 'Lead Form',
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function LeadFormLayout({ children }: { children: React.ReactNode }) {
     return (
         <SidebarProvider
             style={

@@ -1,11 +1,10 @@
 'use client';
 
-import { Column, ColumnDef } from '@tanstack/react-table';
-import { Checkbox } from '@/components/ui/checkbox';
+import { ColumnDef } from '@tanstack/react-table';
 import { StatusBadge } from '../../status-badge';
 import { formatWorkingDays } from '@/lib/string';
 import Link from 'next/link';
-import { ChevronRight, Pencil } from 'lucide-react';
+import { ChevronRight, Eye, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Broker } from '@/lib/types/broker-schema';
 
@@ -58,11 +57,20 @@ export const brokerColumns: ColumnDef<Broker>[] = [
         enableSorting: false,
         size: 10,
         cell: ({ row }) => (
-            <Button variant="ghost" size="icon" className="hover:bg-transparent" asChild>
-                <Link href={`/brokers/${row.original.id}/edit`}>
-                    <ChevronRight className="size-4" />
-                </Link>
-            </Button>
+            <>
+                <Button variant="ghost" className="hover:bg-transparent hover:underline" asChild>
+                    <Link href={`/brokers/${row.original.id}/edit`}>
+                        <Pencil className="size-4" />
+                        Edit
+                    </Link>
+                </Button>
+                <Button variant="ghost" className="hover:bg-transparent hover:underline" asChild>
+                    <Link href={`/brokers/${row.original.id}/view`}>
+                        <Eye className="size-4" />
+                        View
+                    </Link>
+                </Button>
+            </>
         ),
     },
 ];

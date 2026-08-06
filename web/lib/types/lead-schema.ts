@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { Broker } from './broker-schema';
+import { LeadForm } from './lead-form-schema';
 
 export const leadSchema = z.object({
     name: z.string().trim().min(1, 'Name is required'),
@@ -27,4 +29,6 @@ export interface Lead extends LeadValues {
     brokerId: string | null;
     status: LeadStatus;
     createdAt: string;
+    broker: Broker;
+    form: LeadForm;
 }

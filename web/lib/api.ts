@@ -2,6 +2,7 @@ import { Broker } from './types/broker-schema';
 import { AddBrokerToDistributionValues, Distribution, DistributionBroker, DistributionBrokersFormValues } from './types/distribution-schema';
 import { LeadForm, LeadFormValues } from './types/lead-form-schema';
 import { Lead, LeadValues } from './types/lead-schema';
+import { Metrics } from './types/metrics';
 import { PaginationMetadata, SearchQuery } from './types/pagination';
 
 type BrokerWorkingDaysList = Omit<Broker, 'workingDays'> & { workingDays: string[] };
@@ -339,6 +340,97 @@ export async function submitLead(leadValues: LeadValues & { slug: string }): Pro
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(leadValues),
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function getDistributionLeads(query: SearchQuery & { distributionId?: string } = {}): Promise<{ data: Lead[]; metadata: PaginationMetadata }> {
+    const url = new URL(`/leads/${query.distributionId}`, process.env.NEXT_PUBLIC_API_URL);
+    url.search = new URLSearchParams({
+        ...(query.search && { search: query.search }),
+        ...(query.pagination && {
+            page: (query.pagination.pageIndex + 1).toString(),
+            limit: query.pagination.pageSize.toString(),
+        }),
+        ...(query.sorting && {
+            orderBy: query.sorting.at(0)?.id,
+            orderDirection: query.sorting.at(0)?.desc ? 'desc' : 'asc',
+        }),
+    }).toString();
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function getAllLeads(query: SearchQuery = {}): Promise<{ data: Lead[]; metadata: PaginationMetadata }> {
+    const url = new URL(`/leads`, process.env.NEXT_PUBLIC_API_URL);
+    url.search = new URLSearchParams({
+        ...(query.brokerId && { brokerId: query.brokerId }),
+        ...(query.search && { search: query.search }),
+        ...(query.pagination && {
+            page: (query.pagination.pageIndex + 1).toString(),
+            limit: query.pagination.pageSize.toString(),
+        }),
+        ...(query.sorting && {
+            orderBy: query.sorting.at(0)?.id,
+            orderDirection: query.sorting.at(0)?.desc ? 'desc' : 'asc',
+        }),
+    }).toString();
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function assignLead(query: { id: string; brokerId: string }): Promise<{ data: Lead }> {
+    const { id, brokerId } = query;
+    const url = new URL(`/leads/${id}/assign`, process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            brokerId,
+        }),
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new ApiError(errorData?.message || ApiError.defaultErrorMsg, response.status, errorData);
+    }
+    return response.json();
+}
+
+export async function getMetrics(): Promise<Metrics> {
+    const url = new URL(`/metrics`, process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
         credentials: 'include',
     });
     if (!response.ok) {

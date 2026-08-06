@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     title: 'Broker Distribution',
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DistributionLayout({ children }: { children: React.ReactNode }) {
     return (
         <SidebarProvider
             style={

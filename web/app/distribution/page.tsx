@@ -17,9 +17,11 @@ import {
 } from '@/lib/api';
 import { toast } from 'sonner';
 import { DistributionSkeleton } from '@/components/custom/loaders/distribution-skeleton';
+import { useRouter } from 'next/navigation';
 
 export default function DistributionPage() {
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     // Retrieves lead form
     const { data: formData, isSuccess: isFormDataSuccess } = useQuery({
@@ -36,10 +38,7 @@ export default function DistributionPage() {
     });
 
     // Create Distribution
-    const {
-        mutate: createDistributionMutate,
-        isPending: isCreateDistributionPending,
-    } = useMutation({
+    const { mutate: createDistributionMutate, isPending: isCreateDistributionPending } = useMutation({
         mutationFn: createDistribution,
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -138,8 +137,9 @@ export default function DistributionPage() {
     }
 
     function handleViewDetail() {
-        // Real version: router.push('/distribution/detail')
-        console.log('Navigate to Distribution Detail');
+        if (isDistributionSuccess) {
+            router.push(`/distribution/${distributionData.data.id}`);
+        }
     }
 
     return (

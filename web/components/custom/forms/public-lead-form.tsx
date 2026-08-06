@@ -18,7 +18,6 @@ interface LeadFormProps {
 }
 
 export function PublicLeadForm({ slug }: LeadFormProps) {
-
     const form = useForm<LeadValues>({
         resolver: zodResolver(leadSchema),
         defaultValues: { name: '', email: '', phone: '' },
@@ -48,8 +47,8 @@ export function PublicLeadForm({ slug }: LeadFormProps) {
     function onSubmit(values: LeadValues) {
         mutate({
             slug,
-            ...values
-        })
+            ...values,
+        });
     }
 
     return (

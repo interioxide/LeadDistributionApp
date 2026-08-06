@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { BrokerForm } from '@/components/custom/forms/broker-form';
 import type { BrokerValues } from '@/lib/types/broker-schema';
 import { PageHeader } from '@/components/custom/page-header';
@@ -20,11 +19,7 @@ export default function EditBrokerPage() {
     });
 
     const queryClient = useQueryClient();
-    const {
-        mutate,
-        isPending: isUpdateBrokerPending,
-        isSuccess: isUpdateBrokerSuccess,
-    } = useMutation({
+    const { mutate, isPending: isUpdateBrokerPending } = useMutation({
         mutationFn: updateBroker,
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -43,7 +38,7 @@ export default function EditBrokerPage() {
 
     return (
         <div className="flex flex-1 flex-col">
-            <PageHeader title={`Edit Broker`} />
+            <PageHeader title={isBrokerSuccess ? `Edit Broker - ${brokerData.data.name}` : `Loading...`} />
             {isBrokerSuccess ? (
                 <BrokerForm mode="edit" onSubmit={handleSubmit} defaultValues={brokerData.data} isSubmitting={isUpdateBrokerPending} />
             ) : (

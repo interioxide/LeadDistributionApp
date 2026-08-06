@@ -11,6 +11,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { NumericInput } from './numeric-input';
 import { Card, CardContent, CardTitle } from '../ui/card';
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
 
 interface AvailableBroker {
     id: string;
@@ -37,7 +38,15 @@ export function AddBrokerToDistribution({ availableBrokers, onAdd, isAdding }: A
     }
 
     if (availableBrokers.length === 0) {
-        return <p className="text-sm text-muted-foreground">All existing brokers have already been added to this distribution.</p>;
+        return (
+            <p className="text-sm text-muted-foreground">
+                There are no brokers available for lead distribution yet.{' '}
+                <Link href="/brokers/add" className="underline">
+                    Add new broker
+                </Link>{' '}
+                to get started.
+            </p>
+        );
     }
 
     return (

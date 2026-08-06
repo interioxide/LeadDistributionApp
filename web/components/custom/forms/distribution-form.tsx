@@ -130,7 +130,7 @@ export function DistributionForm({
                         {form.name}
                     </Link>
                 </StatusBadge>
-                <Button variant="outline" onClick={onViewDetail}>
+                <Button variant="outline" onClick={onViewDetail} className="cursor-pointer">
                     <History className="mr-2 h-4 w-4" aria-hidden="true" />
                     View Distribution Detail
                 </Button>
