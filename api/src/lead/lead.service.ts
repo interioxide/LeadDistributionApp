@@ -75,7 +75,7 @@ export class LeadService {
     }
 
     async findAll(query: LeadsPaginationQueryDto, distributionId: string | null = null) {
-        const { page, limit, offset, search, brokerId} = query;
+        const { page, limit, offset, search, brokerId } = query;
         const whereInput: LeadWhereInput = {
             ...(search && {
                 OR: [
@@ -91,11 +91,9 @@ export class LeadService {
                     },
                 ],
             }),
-            ...(
-                brokerId && ({
-                    brokerId
-                })
-            )
+            ...(brokerId && {
+                brokerId,
+            }),
         };
 
         if (distributionId) {
