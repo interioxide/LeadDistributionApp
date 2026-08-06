@@ -53,7 +53,7 @@ cd ../web
 npm install
 ```
 
-### 4. Database setup and migrations
+### 4. Database setup and migrations (Optional: For local setup only)
 
 From the **project root**, start MySQL via Docker:
 
