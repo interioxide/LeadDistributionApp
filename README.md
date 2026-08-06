@@ -95,12 +95,12 @@ Open browser using the URL: http://localhost:8305
 # Backend
 cd api
 npm run build
-pm2 start dist/main.js --name lead-distribution-api
 
 # Frontend
-cd web
+cd ../web
 npm run build
-pm2 start npm --name lead-distribution-web -- start
+
+pm2 start ecosystem.config.js
 ```
 
 To restart after a deploy or config change:

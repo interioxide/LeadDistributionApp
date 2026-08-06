@@ -3,15 +3,16 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError, loginUser } from '@/lib/api';
 import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 
 const loginSchema = z.object({
     email: z.string().trim().min(1, 'Email is required'),
@@ -29,7 +30,14 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
         resolver: zodResolver(loginSchema),
         defaultValues: { email: '', password: '' },
     });
-    const searchParams = useSearchParams();
+    const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const callbackUrlParam = params.get('callbackUrl');
+        setCallbackUrl(callbackUrlParam);
+    }, [callbackUrl]);
+
     const router = useRouter();
     const queryClient = useQueryClient();
 
@@ -40,7 +48,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                 queryKey: ['profile'],
             });
 
-            const redirectUrl = searchParams.get('callbackUrl') ?? '/dashboard';
+            const redirectUrl = callbackUrl ?? '/dashboard';
             router.replace(redirectUrl);
         },
         onError: (error: ApiError) => {
