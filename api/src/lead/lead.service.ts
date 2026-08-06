@@ -10,6 +10,7 @@ import { Broker } from '@generated/prisma/client';
 import { EligibleBroker } from './interfaces/eligible-broker.interface';
 import { PaginationMetaDataDto, PaginationQueryDto, PaginationResponseDto } from '@app/common/dto/pagination.dto';
 import { LeadWhereInput } from '@generated/prisma/models';
+import { LeadsPaginationQueryDto } from './dto/leads-pagination-query.dto';
 
 @Injectable()
 export class LeadService {
@@ -73,8 +74,8 @@ export class LeadService {
         return new DataResponseDto(createLead);
     }
 
-    async findAll(query: PaginationQueryDto, distributionId: string | null = null) {
-        const { page, limit, offset, search } = query;
+    async findAll(query: LeadsPaginationQueryDto, distributionId: string | null = null) {
+        const { page, limit, offset, search, brokerId} = query;
         const whereInput: LeadWhereInput = {
             ...(search && {
                 OR: [
@@ -90,6 +91,11 @@ export class LeadService {
                     },
                 ],
             }),
+            ...(
+                brokerId && ({
+                    brokerId
+                })
+            )
         };
 
         if (distributionId) {
