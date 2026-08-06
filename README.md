@@ -107,8 +107,7 @@ pm2 start ecosystem.config.js
 To restart after a deploy or config change:
 
 ```bash
-pm2 restart lead-distribution-api
-pm2 restart lead-distribution-web
+pm2 restart ecosystem.config.js --update-env
 ```
 
 To check logs:

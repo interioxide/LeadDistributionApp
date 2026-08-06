@@ -32,7 +32,8 @@ export class ApiError<T = unknown> extends Error {
 }
 
 export async function loginUser(data: { email: string; password: string }) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    const url = new URL('/api/auth/login', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -49,7 +50,8 @@ export async function loginUser(data: { email: string; password: string }) {
 }
 
 export async function logoutUser() {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+    const url = new URL('/api/auth/logout', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
     });
@@ -62,7 +64,8 @@ export async function logoutUser() {
 }
 
 export async function getCurrentUser() {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
+    const url = new URL('/api/profile', process.env.NEXT_PUBLIC_API_URL);
+    const response = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -77,7 +80,7 @@ export async function getCurrentUser() {
 }
 
 export async function getBrokers(query: SearchQuery = {}): Promise<{ data: BrokerWorkingDaysList[]; metadata: PaginationMetadata }> {
-    const url = new URL('/brokers', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/brokers', process.env.NEXT_PUBLIC_API_URL);
     url.search = new URLSearchParams({
         ...(query.search && { search: query.search }),
         ...(query.pagination && {
@@ -115,7 +118,7 @@ export async function getBrokers(query: SearchQuery = {}): Promise<{ data: Broke
 }
 
 export async function getBrokerById(id: string): Promise<{ data: Broker }> {
-    const url = new URL(`/brokers/${id.trim()}`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/brokers/${id.trim()}`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -134,7 +137,7 @@ export async function getBrokerById(id: string): Promise<{ data: Broker }> {
 }
 
 export async function createBroker(broker: Omit<Broker, 'id'>): Promise<{ data: Broker }> {
-    const url = new URL(`/brokers`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/brokers`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -153,7 +156,7 @@ export async function createBroker(broker: Omit<Broker, 'id'>): Promise<{ data: 
 
 export async function updateBroker(broker: Broker): Promise<{ data: Broker }> {
     const { id, ...data } = broker;
-    const url = new URL(`/brokers/${broker.id.trim()}`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/brokers/${broker.id.trim()}`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
@@ -171,7 +174,7 @@ export async function updateBroker(broker: Broker): Promise<{ data: Broker }> {
 }
 
 export async function getLeadForm(): Promise<{ data: LeadForm }> {
-    const url = new URL('/form', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/form', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -187,7 +190,7 @@ export async function getLeadForm(): Promise<{ data: LeadForm }> {
 }
 
 export async function createLeadForm(leadForm: LeadFormValues): Promise<{ data: LeadForm }> {
-    const url = new URL('/form', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/form', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -204,7 +207,7 @@ export async function createLeadForm(leadForm: LeadFormValues): Promise<{ data: 
 }
 
 export async function createDistribution(): Promise<{ data: Distribution }> {
-    const url = new URL('/distribution', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/distribution', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -220,7 +223,7 @@ export async function createDistribution(): Promise<{ data: Distribution }> {
 }
 
 export async function getDistribution(): Promise<{ data: Distribution }> {
-    const url = new URL('/distribution', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/distribution', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -236,7 +239,7 @@ export async function getDistribution(): Promise<{ data: Distribution }> {
 }
 
 export async function getDistributionBrokers(query: SearchQuery = {}): Promise<{ data: DistributionBroker[]; metadata: PaginationMetadata }> {
-    const url = new URL('/distribution/brokers', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/distribution/brokers', process.env.NEXT_PUBLIC_API_URL);
     url.search = new URLSearchParams({
         ...(query.search && { search: query.search }),
         ...(query.pagination && {
@@ -276,7 +279,7 @@ export async function getDistributionBrokers(query: SearchQuery = {}): Promise<{
 }
 
 export async function addDistributionBroker(brokerToDistributionValues: AddBrokerToDistributionValues): Promise<{ data: DistributionBroker }> {
-    const url = new URL('/distribution/broker', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/distribution/broker', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
@@ -293,7 +296,7 @@ export async function addDistributionBroker(brokerToDistributionValues: AddBroke
 }
 
 export async function removeDistributionBroker(brokerId: string): Promise<{ data: { count: number } }> {
-    const url = new URL(`/distribution/${brokerId}`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/distribution/${brokerId}`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
@@ -314,7 +317,7 @@ export async function saveDistributionSettings(settings: DistributionBrokersForm
         return newSetting;
     });
 
-    const url = new URL('/distribution/settings', process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL('/api/distribution/settings', process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -333,7 +336,7 @@ export async function saveDistributionSettings(settings: DistributionBrokersForm
 }
 
 export async function submitLead(leadValues: LeadValues & { slug: string }): Promise<{ data: Lead }> {
-    const url = new URL(`leads/${leadValues.slug.trim()}`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/leads/${leadValues.slug.trim()}`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -350,7 +353,7 @@ export async function submitLead(leadValues: LeadValues & { slug: string }): Pro
 }
 
 export async function getDistributionLeads(query: SearchQuery & { distributionId?: string } = {}): Promise<{ data: Lead[]; metadata: PaginationMetadata }> {
-    const url = new URL(`/leads/${query.distributionId}`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/leads/${query.distributionId}`, process.env.NEXT_PUBLIC_API_URL);
     url.search = new URLSearchParams({
         ...(query.search && { search: query.search }),
         ...(query.pagination && {
@@ -377,7 +380,7 @@ export async function getDistributionLeads(query: SearchQuery & { distributionId
 }
 
 export async function getAllLeads(query: SearchQuery = {}): Promise<{ data: Lead[]; metadata: PaginationMetadata }> {
-    const url = new URL(`/leads`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/leads`, process.env.NEXT_PUBLIC_API_URL);
     url.search = new URLSearchParams({
         ...(query.brokerId && { brokerId: query.brokerId }),
         ...(query.search && { search: query.search }),
@@ -406,7 +409,7 @@ export async function getAllLeads(query: SearchQuery = {}): Promise<{ data: Lead
 
 export async function assignLead(query: { id: string; brokerId: string }): Promise<{ data: Lead }> {
     const { id, brokerId } = query;
-    const url = new URL(`/leads/${id}/assign`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/leads/${id}/assign`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -425,7 +428,7 @@ export async function assignLead(query: { id: string; brokerId: string }): Promi
 }
 
 export async function getMetrics(): Promise<Metrics> {
-    const url = new URL(`/metrics`, process.env.NEXT_PUBLIC_API_URL);
+    const url = new URL(`/api/metrics`, process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(url, {
         method: 'GET',
         headers: {
