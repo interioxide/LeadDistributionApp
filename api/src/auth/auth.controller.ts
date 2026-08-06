@@ -15,7 +15,7 @@ export class AuthController {
     ) {
         this.accessTokenCookieOptions = {
             httpOnly: true,
-            secure: true,
+            secure: configService.get<boolean>('responseCookie.secure'),
             sameSite: 'none',
             path: '/',
             domain: configService.get<string>('responseCookie.domain'),

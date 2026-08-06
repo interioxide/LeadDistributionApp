@@ -14,5 +14,6 @@ export default () => ({
     },
     responseCookie: {
         domain: process.env.RESPONSE_COOKIE_DOMAIN ?? '',
+        secure: process.env.RESPONSE_COOKIE_SECURE === 'true',
     },
 });
