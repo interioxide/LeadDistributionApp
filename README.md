@@ -4,8 +4,8 @@ A full-stack lead distribution app — one public lead form, one distribution, m
 Leads are captured with IP address, deduplicated by email, and assigned to eligible brokers
 using a percentage-based deficit algorithm (timezone, working hours, and daily cap aware).
 
-- **Frontend**: Next.js (`web/`)
-- **Backend**: NestJS (`api/`)
+- **Frontend**: [Next.js](https://nextjs.org/) (`web/`)
+- **Backend**: [NestJS](https://nestjs.com/) - Express (`api/`)
 - **Database**: MySQL, accessed via Prisma
 
 ---
@@ -14,8 +14,8 @@ using a percentage-based deficit algorithm (timezone, working hours, and daily c
 
 Install the following before setting up the project:
 
-- **Docker** — https://docs.docker.com/get-docker/
-- **Node.js** (v20 or later recommended) — https://nodejs.org/en/download
+- [**Docker**](https://docs.docker.com/get-docker/)
+- [**Node.js** v20 or later recaommended](https://nodejs.org/en/download)
 
 ---
 
@@ -87,6 +87,7 @@ npm run start:dev
 cd web
 npm run dev
 ```
+Open browser using the URL: http://localhost:8305
 
 ### Production (VPS, via PM2)
 
@@ -126,7 +127,8 @@ pm2 status
 
 ## Accessing the app
 
-- **Admin login**: `http://<vps-ip-or-domain>:<assigned-frontend-port>/login`
+- **Admin login**: `http://<vps-ip-or-domain>:<assigned-frontend-port>/login`.
+
 - **Public lead form**: `http://<vps-ip-or-domain>:<assigned-frontend-port>/<form-slug>`
   (e.g. `/lead-registration`, once the form is created from the admin dashboard)
 
@@ -141,13 +143,13 @@ Suggested checks after deployment (mirrors the exam's suggested test cases):
 
 - [ ] Login works with the seeded admin credentials
 - [ ] Create/edit brokers with all required fields (timezone, hours, working days, daily cap)
-- [ ] Create the one lead form — confirm a second form cannot be created
-- [ ] Try creating a distribution before a form exists — confirm the
+- [ ] Create the one lead form, confirm a second form cannot be created
+- [ ] Try creating a distribution before a form exists, confirm the
       "Oops, please create a form first." message appears
-- [ ] Create the one distribution — confirm a second cannot be created
-- [ ] Submit a lead from the public form URL — confirm IP address is captured and saved
+- [ ] Create the one distribution, confirm a second cannot be created
+- [ ] Submit a lead from the public form URL, confirm IP address is captured and saved
 - [ ] Confirm the lead is assigned to an eligible broker (or marked `unsent` if none are eligible)
-- [ ] Submit the same email again — confirm it's marked `duplicate`
+- [ ] Submit the same email again, confirm it's marked `duplicate`
 - [ ] Confirm a broker outside working hours / at daily cap is skipped during assignment
 - [ ] Manually assign an unsent lead to a broker from the Leads page
 - [ ] Restart the app via PM2 and confirm it comes back up correctly
@@ -156,7 +158,7 @@ Suggested checks after deployment (mirrors the exam's suggested test cases):
 
 ## Notes
 
-- Do not commit real `.env` files, secrets, or VPS credentials — only `.env.example` files
+- Do not commit real `.env` files, secrets, or VPS credentials, only `.env.example` files
   with placeholder values are tracked in git.
 - Only one lead form and one distribution can ever exist, by design (see validation rules
   in the exam spec).
