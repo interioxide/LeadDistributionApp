@@ -16,7 +16,7 @@ export class AuthController {
         this.accessTokenCookieOptions = {
             httpOnly: true,
             secure: configService.get<boolean>('responseCookie.secure'),
-            sameSite: 'none',
+            sameSite: 'lax',
             path: '/',
             domain: configService.get<string>('responseCookie.domain'),
             maxAge: ms(configService.get<string>('accessToken.expiration') as StringValue),
